@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "816140866293",
+    "firebase_url": "https://progtracker-ab0df.firebaseio.com",
+    "project_id": "progtracker-ab0df",
+    "storage_bucket": "progtracker-ab0df.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:816140866293:android:0d1ecef57c86a16888ebbc",
+        "android_client_info": {
+          "package_name": "com.example.prog_tracker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "816140866293-tca54lit8lh00s3jsscu8gve6mbmn9q8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAUH4ZKR4QeGNlalfR5RhzLWBrq8zLjcL8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "816140866293-tca54lit8lh00s3jsscu8gve6mbmn9q8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
