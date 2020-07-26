@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 
 void main() {
   runApp(MyApp());
@@ -52,7 +51,7 @@ class MyApp extends StatelessWidget {
         ),
         body: Center(
           child: Column(
-          
+            mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               MaterialButton(
                 onPressed: () => null,
