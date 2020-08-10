@@ -1,4 +1,6 @@
-import 'login_page.dart';
+import 'login.dart';
+import 'leaderboard.dart';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -7,9 +9,10 @@ void main() {
   runApp(
     MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: '/login',
+      initialRoute: '/leaderboard',
       routes: {
-        '/login' : (context) => LoginPage()
+        '/login' : (context) => LoginPage(),
+        '/leaderboard' : (context) => LeaderboardPage()
       },
     )
    );
@@ -74,7 +77,7 @@ class MyApp extends StatelessWidget {
                 color: Colors.red,
                 child: Text("Logout"),
               ),
-
+              
             ],
           
           ),

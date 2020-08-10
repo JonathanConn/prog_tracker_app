@@ -12,6 +12,10 @@ ThemeData basicTextTheme() {
         fontFamily: 'arial',
         fontSize: 20.0,
         color: Colors.orange
+      ),
+      bodyText1: textBase.bodyText1.copyWith(
+        fontSize: 8,
+        color: Colors.cyan
       )
     );
   }
