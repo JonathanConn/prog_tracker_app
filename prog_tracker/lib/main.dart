@@ -1,3 +1,4 @@
+import 'navbar.dart';
 import 'login.dart';
 import 'leaderboard.dart';
 
@@ -5,86 +6,59 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 void main() {
-  // runApp(MyApp());
+
   runApp(
-    MaterialApp(
-      debugShowCheckedModeBanner: false,
-      initialRoute: '/leaderboard',
-      routes: {
-        '/login' : (context) => LoginPage(),
-        '/leaderboard' : (context) => LeaderboardPage()
-      },
-    )
-   );
+    MaterialApp( home: NavBarWidget() )
+  );
 }
 
-class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
+
+class NavBarWidget extends StatefulWidget {
+  @override
+  _NavBarWidgetState createState() => _NavBarWidgetState();
+}
+
+class _NavBarWidgetState extends State<NavBarWidget> {
+  int _selectedIndex = 0;
+  final routes = [
+    LeaderboardPage(),
+    Container(color: Colors.red,),
+    LoginPage(),
+  ];
+  
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
+    return Scaffold(
 
-    return MaterialApp(
-      title: 'Peerist',
-      theme: ThemeData(
-        
-        primaryTextTheme: GoogleFonts.robotoMonoTextTheme(textTheme).copyWith(
-          headline6: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 30,
-            color: Colors.white54,
+      body: routes[_selectedIndex],
+
+      bottomNavigationBar: BottomNavigationBar (
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            title: Text('Score'),
           ),
-        ),
-
-        textTheme: GoogleFonts.robotoMonoTextTheme(textTheme).copyWith(
-          title: GoogleFonts.abel(
-            textStyle: textTheme.title,
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
+          BottomNavigationBarItem(
+            icon: Icon(Icons.business),
+            title: Text('Home'),
           ),
-          body1: GoogleFonts.robotoMono(
-            textStyle: textTheme.body1,
-            color: Colors.white,
+          BottomNavigationBarItem(
+            icon: Icon(Icons.school),
+            title: Text('Profile'),
           ),
-        ),
-       
-
-        // Define the default brightness and colors.
-        brightness: Brightness.dark,
-        primaryColor: Colors.grey[1000],
-        accentColor: Colors.orange[600],
-
-    
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
-
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text("Login")
-        ),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              MaterialButton(
-                onPressed: () => null,
-                color: Colors.green,
-                child: Text("Login with Google"),
-              ),
-              
-              MaterialButton(
-                onPressed: () => null,
-                color: Colors.red,
-                child: Text("Logout"),
-              ),
-              
-            ],
-          
-          ),
-        ),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.amber[800],
+        onTap: _onItemTapped,
       ),
 
     );
+    
   }
 }
-

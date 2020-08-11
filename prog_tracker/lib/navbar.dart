@@ -1,4 +1,3 @@
-import 'theme.dart';
 import 'package:flutter/material.dart';
 
 class NavBarWidget extends StatefulWidget {
@@ -15,15 +14,15 @@ class _NavBarWidgetState extends State<NavBarWidget> {
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   static const List<Widget> _widgetOptions = <Widget>[
     Text(
-      'Index 0: Home',
+      'Score',
       style: optionStyle,
     ),
     Text(
-      'Index 1: Business',
+      'Home',
       style: optionStyle,
     ),
     Text(
-      'Index 2: School',
+      'Profile',
       style: optionStyle,
     ),
   ];
@@ -40,15 +39,15 @@ class _NavBarWidgetState extends State<NavBarWidget> {
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
-            title: Text('Home'),
+            title: Text('Score'),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.business),
-            title: Text('Business'),
+            title: Text('Home'),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.school),
-            title: Text('School'),
+            title: Text('Profile'),
           ),
         ],
         currentIndex: _selectedIndex,
