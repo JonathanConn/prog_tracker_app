@@ -1,5 +1,6 @@
 import 'leaderboard.dart';
 import 'profile.dart';
+import 'home.dart';
 
 import 'package:flutter/material.dart';
 
@@ -12,7 +13,7 @@ class _NavBarWidgetState extends State<NavBarWidget> {
   int _selectedIndex = 0;
   final routes = [
     LeaderboardPage(),
-    Container(color: Colors.red,),
+    HomePage(),
     LandingPage(),
   ];
   

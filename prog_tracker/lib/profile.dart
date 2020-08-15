@@ -16,7 +16,7 @@ class LandingPage extends StatelessWidget {
           if (user == null) {
             return SignInPage();
           }
-          return HomePage();
+          return HomeLoginPage();
         } else {
           return Scaffold(
             body: Center(
@@ -106,7 +106,7 @@ class _SignInPageState extends State<SignInPage> {
   }
 }
 
-class HomePage extends StatelessWidget {
+class HomeLoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
