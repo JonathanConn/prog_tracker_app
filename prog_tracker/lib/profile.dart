@@ -36,8 +36,8 @@ class SignInPage extends StatefulWidget {
 
 class _SignInPageState extends State<SignInPage> {
   final _formKey = GlobalKey<FormState>();
-  String _password;
-  String _email;
+  final TextEditingController _email = new TextEditingController();
+  final TextEditingController _password = new TextEditingController();
 
   // access to our google sign in 
   final GoogleSignIn _googleSignIn = GoogleSignIn();
@@ -66,7 +66,7 @@ class _SignInPageState extends State<SignInPage> {
   }
 
 
-  Future<void> _handleSignInEmail() async {
+  Future<void> _handleSignInEmail(String _email, String _password) async {
       print('login info $_email  $_password');
       AuthResult result = await _auth.signInWithEmailAndPassword(
         email: _email, password: _password
@@ -85,10 +85,10 @@ class _SignInPageState extends State<SignInPage> {
 
     }
 
-  Future<void> _handleSignUp() async {
+  Future<void> _handleSignUp(email, password) async {
 
       AuthResult result = await _auth.createUserWithEmailAndPassword(
-        email: _email, password: _password
+        email: email, password: password
       );
       final FirebaseUser user = result.user;
 
@@ -125,22 +125,29 @@ class _SignInPageState extends State<SignInPage> {
                 children: <Widget>[
 
                 TextFormField(
-                  onSaved: (value) => _email = value, 
+                  controller: _email,
                   keyboardType: TextInputType.emailAddress,
                   decoration: InputDecoration(labelText: "Email"),
                 ),
 
                 TextFormField(
-                  onSaved: (value) => _password = value,
+                controller: _password,
                   obscureText: true,
                   decoration: InputDecoration(labelText: "Pass"),
                 ),
 
                 RaisedButton(
-                  child: Text('Sign in email'),
+                  child: Text('Log in email'),
                   onPressed: () async {
                     _formKey.currentState.save(); 
-                   _handleSignInEmail();
+                   _handleSignInEmail(_email.text, _password.text);
+                  }
+                ),
+                RaisedButton(
+                  child: Text('Sign up email'),
+                  onPressed: () async {
+                    _formKey.currentState.save(); 
+                   _handleSignUp(_email.text, _password.text);
                   }
                 ),
 
@@ -185,6 +192,7 @@ class HomePage extends StatelessWidget {
           ),
         ],
       ),
+      
     );
   }
 }
