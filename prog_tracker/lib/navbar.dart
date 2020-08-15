@@ -1,5 +1,4 @@
 import 'leaderboard.dart';
-import 'login.dart';
 import 'profile.dart';
 
 import 'package:flutter/material.dart';

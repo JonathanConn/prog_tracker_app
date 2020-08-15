@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class LandingPage extends StatelessWidget {
+  
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<FirebaseUser>(
@@ -28,7 +29,15 @@ class LandingPage extends StatelessWidget {
   }
 }
 
-class SignInPage extends StatelessWidget {
+class SignInPage extends StatefulWidget {
+  @override
+  _SignInPageState createState() => _SignInPageState();
+}
+
+class _SignInPageState extends State<SignInPage> {
+  final _formKey = GlobalKey<FormState>();
+  String _password;
+  String _email;
 
   // access to our google sign in 
   final GoogleSignIn _googleSignIn = GoogleSignIn();
@@ -53,14 +62,45 @@ class SignInPage extends StatelessWidget {
       idToken: googleAuth.idToken,
     );
 
-    final FirebaseUser user = (await _auth.signInWithCredential(credential)).user;
-    print("signed in " + user.displayName);
-  
+    final FirebaseUser user = (await _auth.signInWithCredential(credential)).user;  
   }
 
 
+  Future<void> _handleSignInEmail() async {
+      print('login info $_email  $_password');
+      AuthResult result = await _auth.signInWithEmailAndPassword(
+        email: _email, password: _password
+      );
+      final FirebaseUser user = result.user;
+
+      assert(user != null);
+      assert(await user.getIdToken() != null);
+
+      final FirebaseUser currentUser = await _auth.currentUser();
+      assert(user.uid == currentUser.uid);
+
+      print('signInEmail succeeded: $user');
+
+      //return user;
+
+    }
+
+  Future<void> _handleSignUp() async {
+
+      AuthResult result = await _auth.createUserWithEmailAndPassword(
+        email: _email, password: _password
+      );
+      final FirebaseUser user = result.user;
+
+      assert (user != null);
+      assert (await user.getIdToken() != null);
+
+      //return user;
+    } 
+
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(title: Text('Sign in')),
       body: Center(
@@ -77,6 +117,37 @@ class SignInPage extends StatelessWidget {
               child: Text('Sign in google'),
               onPressed: _signInGoogle,
             ),
+
+
+            Form(
+              key: _formKey,
+              child: Column(
+                children: <Widget>[
+
+                TextFormField(
+                  onSaved: (value) => _email = value, 
+                  keyboardType: TextInputType.emailAddress,
+                  decoration: InputDecoration(labelText: "Email"),
+                ),
+
+                TextFormField(
+                  onSaved: (value) => _password = value,
+                  obscureText: true,
+                  decoration: InputDecoration(labelText: "Pass"),
+                ),
+
+                RaisedButton(
+                  child: Text('Sign in email'),
+                  onPressed: () async {
+                    _formKey.currentState.save(); 
+                   _handleSignInEmail();
+                  }
+                ),
+
+                ],
+              ),
+            ),
+
 
           ]
 
