@@ -1,32 +1,22 @@
+import 'leaderboard.dart';
+import 'login.dart';
+import 'profile.dart';
+
 import 'package:flutter/material.dart';
 
 class NavBarWidget extends StatefulWidget {
-  NavBarWidget({Key key}) : super(key: key);
-
   @override
   _NavBarWidgetState createState() => _NavBarWidgetState();
 }
 
 class _NavBarWidgetState extends State<NavBarWidget> {
-
   int _selectedIndex = 0;
-  static const TextStyle optionStyle =
-      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-  static const List<Widget> _widgetOptions = <Widget>[
-    Text(
-      'Score',
-      style: optionStyle,
-    ),
-    Text(
-      'Home',
-      style: optionStyle,
-    ),
-    Text(
-      'Profile',
-      style: optionStyle,
-    ),
+  final routes = [
+    LeaderboardPage(),
+    Container(color: Colors.red,),
+    LandingPage(),
   ];
-
+  
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -35,7 +25,11 @@ class _NavBarWidgetState extends State<NavBarWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return BottomNavigationBar (
+    return Scaffold(
+
+      body: routes[_selectedIndex],
+
+      bottomNavigationBar: BottomNavigationBar (
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
@@ -53,6 +47,9 @@ class _NavBarWidgetState extends State<NavBarWidget> {
         currentIndex: _selectedIndex,
         selectedItemColor: Colors.amber[800],
         onTap: _onItemTapped,
-      );
+      ),
+
+    );
+    
   }
 }

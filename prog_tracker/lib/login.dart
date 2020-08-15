@@ -130,13 +130,7 @@ class WelcomeUser extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        iconTheme: IconThemeData(color: Colors.black),
-        elevation: 0,
-      ),
-      body: Container(
+    return Container(
         color: Colors.white,
         padding: EdgeInsets.all(50),
         child: Align(
@@ -183,8 +177,7 @@ class WelcomeUser extends StatelessWidget {
             ],
           )
         )
-      )
-    );
+      );
   }
 
 
