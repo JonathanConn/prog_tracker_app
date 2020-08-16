@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:intl/intl.dart';
+import 'graph.dart';
 
 class HomePage extends StatefulWidget {
 
@@ -36,40 +37,19 @@ class _HomePageState extends State<HomePage> {
       
       appBar: AppBar(
         title: Text(_timeString),
+        actions: <Widget> [
+          IconButton(
+            icon: Icon(Icons.emoji_events), 
+            onPressed: () {  print('icon selected\n'); },
+                        
+          )
+
+        ],
 
       ),
 
 
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-            Row(
-              children: [
-                Container (
-                  color: Colors.red,
-                  child: Center(
-                    child: Text('First Row'),      
-                  ),
-                )
-              ],
-            ),
-          
-          Row(
-              children: [
-                Container (color: Colors.blue,)
-              ],
-            ),
-
-            Row(
-              children: [
-                Container (color: Colors.green,)
-              ],
-            ),
-          
-            
-
-        ],
-      )
+      body: GaugeChart.withSampleData(),
 
     );
     
