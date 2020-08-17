@@ -29,7 +29,7 @@ class DataBaseListView extends StatelessWidget{
               children: snapshot.data.documents.map((DocumentSnapshot document) {
                 return new ListTile(
                   title: new Text(document['name']),
-                  subtitle: new Text(document['score']),
+                  subtitle: new Text(document['score'].toString()),
                 );
               }).toList(),
             );

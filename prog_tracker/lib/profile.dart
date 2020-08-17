@@ -52,12 +52,12 @@ class _SignInPageState extends State<SignInPage> {
             RaisedButton(
               child: Text('Sign in anonymously'),
               onPressed: 
-                Fire.signInAnonymously,
+                LoginAuth.signInAnonymously,
             ),
           
             RaisedButton(
               child: Text('Sign in google'),
-              onPressed: Fire.signInGoogle,
+              onPressed: LoginAuth.signInGoogle,
             ),
 
 
@@ -82,14 +82,14 @@ class _SignInPageState extends State<SignInPage> {
                   child: Text('Log in email'),
                   onPressed: () async {
                     _formKey.currentState.save(); 
-                   Fire.handleSignInEmail(_email.text, _password.text);
+                   LoginAuth.handleSignInEmail(_email.text, _password.text);
                   }
                 ),
                 RaisedButton(
                   child: Text('Sign up email'),
                   onPressed: () async {
                     _formKey.currentState.save(); 
-                   Fire.handleSignUp(_email.text, _password.text);
+                   LoginAuth.handleSignUp(_email.text, _password.text);
                   }
                 ),
 
@@ -122,7 +122,7 @@ class HomeLoginPage extends StatelessWidget {
                 color: Colors.white,
               ),
             ),
-            onPressed: Fire.signOut,
+            onPressed: LoginAuth.signOut,
           ),
         ],
       ),
