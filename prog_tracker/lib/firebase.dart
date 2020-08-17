@@ -58,7 +58,7 @@ class LoginAuth {
 
   static Future<FirebaseUser> handleSignUp(String _email, String _password) async {
     AuthResult result = await _auth.createUserWithEmailAndPassword(
-      email: _email, password: _password
+      email: _email.trim(), password: _password.trim()
     );
     final FirebaseUser user = result.user;
 
@@ -73,7 +73,8 @@ class LoginAuth {
 class Database {
 
  static void addUserToDatabase (FirebaseUser _user){
-  
+   print(_user.uid);
+   print(_user.uid.toString());
    // if user already exist it will update it
    Firestore.instance.collection("users").document(_user.uid).setData(
      {
