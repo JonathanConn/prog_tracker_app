@@ -22,6 +22,8 @@ class LoginAuth {
   static Future<void> signOut() async {
     try {
       await FirebaseAuth.instance.signOut();
+      _user = null;
+      _userID = null;
     } catch (e) {
       print(e); // TODO: show dialog with error
     }
@@ -116,29 +118,36 @@ class Database {
 class TasksListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<QuerySnapshot>(
-      stream: Firestore.instance
-          .collection('users')
-          .document(_userID)
-          .collection("tasks")
-          .snapshots(),
-      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-        if (snapshot.hasError) return new Text('Error: ${snapshot.error}');
-        switch (snapshot.connectionState) {
-          case ConnectionState.waiting:
-            return new Text('Loading...');
-          default:
-            return new ListView(
-              children:
-                  snapshot.data.documents.map((DocumentSnapshot document) {
-                return new ListTile(
-                  title: new Text(document['name']),
-                  // subtitle: new Text(document['task_due'].toString()),
+    return (() {
+      if (_userID == null) {
+        return new Text("Sign in first plz");
+      } else {
+        return StreamBuilder<QuerySnapshot>(
+          stream: Firestore.instance
+              .collection('users')
+              .document(_userID)
+              .collection("tasks")
+              .snapshots(),
+          builder:
+              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            if (snapshot.hasError) return new Text('Error: ${snapshot.error}');
+            switch (snapshot.connectionState) {
+              case ConnectionState.waiting:
+                return new Text('Loading...');
+              default:
+                return new ListView(
+                  children:
+                      snapshot.data.documents.map((DocumentSnapshot document) {
+                    return new ListTile(
+                      title: new Text(document['task_name']),
+                      // subtitle: new Text(document['task_due'].toString()),
+                    );
+                  }).toList(),
                 );
-              }).toList(),
-            );
-        }
-      },
-    );
+            }
+          },
+        );
+      }
+    }());
   }
 }
