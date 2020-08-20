@@ -84,6 +84,26 @@ class LoginAuth {
   }
 }
 
+class Task {
+  String name;
+  int timeSpent;
+  Timestamp dueDate, startDate, endDate, createdDate;
+  bool completed;
+
+  Task(String name) {
+    this.name = name;
+    this.createdDate = Timestamp.now();
+
+    this.startDate =
+        Timestamp.now(); // default so we dont pass null into firebase
+    this.endDate =
+        Timestamp.now(); // default so we dont pass null into firebase
+
+    this.completed = false;
+    this.timeSpent = 0;
+  }
+}
+
 class Database {
   static void addUserToDatabase(FirebaseUser _user) {
     print(_user.uid);
@@ -97,19 +117,39 @@ class Database {
         .then((value) {
       if (!value.exists) {
         Firestore.instance.collection("users").document(_user.uid).setData(
-            {"name": _user.uid.toString(), "score": 0},
+            {"name": _user.uid.toString(), "score": 0, "tasks": {}},
             merge: false // merge true overrites data
             );
-        Firestore.instance
-            .collection("users")
-            .document(_user.uid)
-            .collection("tasks")
-            .add({
-          "task_name": "placeholder_task_name",
-          "task_due": "overdue",
-          "time_spent": 0,
-          "completed": false,
-        });
+        // Firestore.instance
+        //     .collection("users")
+        //     .document(_user.uid)
+        //     .collection("tasks")
+        //     .document()
+        //     .setData({});
+      }
+    });
+  }
+
+  static void addTaskToUser(FirebaseUser _user, Task _task) {
+    Firestore.instance
+        .collection("users")
+        .document(_user.uid)
+        .get()
+        .then((value) {
+      if (!value.exists) {
+        Firestore.instance.collection("users").document(_user.uid).setData({
+          "tasks": {
+            "$_task.name": {
+              "name": _task.name,
+              "dueDate": _task.dueDate,
+              "timeSpent": _task.timeSpent,
+              "completed": _task.completed,
+              "createdDate": _task.createdDate,
+              "startDate": _task.startDate,
+              "endDate": _task.endDate,
+            }
+          }
+        }, merge: true);
       }
     });
   }
@@ -122,31 +162,19 @@ class TasksListView extends StatelessWidget {
       if (_userID == null) {
         return new Text("Sign in first plz");
       } else {
-        return StreamBuilder<QuerySnapshot>(
-          stream: Firestore.instance
-              .collection('users')
-              .document(_userID)
-              .collection("tasks")
-              .snapshots(),
-          builder:
-              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-            if (snapshot.hasError) return new Text('Error: ${snapshot.error}');
-            switch (snapshot.connectionState) {
-              case ConnectionState.waiting:
-                return new Text('Loading...');
-              default:
-                return new ListView(
-                  children:
-                      snapshot.data.documents.map((DocumentSnapshot document) {
-                    return new ListTile(
-                      title: new Text(document['task_name']),
-                      // subtitle: new Text(document['task_due'].toString()),
-                    );
-                  }).toList(),
-                );
-            }
-          },
-        );
+        return new StreamBuilder(
+            stream: Firestore.instance
+                .collection("users")
+                .document(_userID)
+                .snapshots(),
+            builder: (context, snapshot) {
+              // lord forgive me for my sins
+              if (snapshot.data["tasks"].toString() == "{}") {
+                return new Text("No tasks :) ");
+              } else {
+                return new Text("${snapshot.data["tasks"].toString()}");
+              }
+            });
       }
     }());
   }
