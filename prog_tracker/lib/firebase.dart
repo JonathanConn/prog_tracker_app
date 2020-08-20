@@ -168,12 +168,24 @@ class TasksListView extends StatelessWidget {
                 .document(_userID)
                 .snapshots(),
             builder: (context, snapshot) {
-              // lord forgive me for my sins
               if (snapshot.data["tasks"].toString() == "{}") {
                 return new Text("No tasks :) ");
               } else {
-                return new Text("${snapshot.data["tasks"].toString()}");
+                DocumentSnapshot doc = snapshot.data;
+                Map<String, dynamic> taskMap = doc.data["tasks"];
+                List<ListTile> tiles = taskMap.keys
+                    .map((e) => new ListTile(title: new Text("${e}")))
+                    .toList();
+
+                return new ListView(
+                  children: tiles,
+                );
               }
+
+              return new Text(
+                  "${snapshot.data["tasks"].map((Map<String, dynamic> v) => v["name"])}");
+
+              return new Text("${snapshot.data["tasks"]["task1"].toString()}");
             });
       }
     }());
