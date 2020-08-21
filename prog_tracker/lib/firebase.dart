@@ -87,11 +87,15 @@ class LoginAuth {
 class Task {
   String name;
   int timeSpent, priority;
-  Timestamp dueDate, startDate, endDate, createdDate;
+  Timestamp startDate, endDate, createdDate;
+  DateTime dueDate;
   bool completed;
 
-  Task(String name) {
+  Task(String name, DateTime dueDate, int priority) {
     this.name = name;
+    this.dueDate = dueDate;
+    this.priority = priority;
+
     this.createdDate = Timestamp.now();
 
     this.startDate =
@@ -125,13 +129,16 @@ class Database {
     });
   }
 
-  static void addTaskToUser(FirebaseUser _user, Task _task) {
+  static void addTaskToUser(Task _task) {
+    print("Before TASK TO STR: ${_task.toString()}");
+    print(_userID.toString());
     Firestore.instance
         .collection("users")
         .document(_user.uid)
         .get()
         .then((value) {
-      if (!value.exists) {
+      if (value.exists) {
+        print("TASK TO STR: ${_task.toString()}");
         Firestore.instance.collection("users").document(_user.uid).setData({
           "tasks": {
             "$_task.name": {
@@ -142,9 +149,12 @@ class Database {
               "createdDate": _task.createdDate,
               "startDate": _task.startDate,
               "endDate": _task.endDate,
+              "priority": _task.priority
             }
           }
         }, merge: true);
+      } else {
+        print("USER NOT FOUND");
       }
     });
   }
