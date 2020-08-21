@@ -120,12 +120,6 @@ class Database {
             {"name": _user.uid.toString(), "score": 0, "tasks": {}},
             merge: false // merge true overrites data
             );
-        // Firestore.instance
-        //     .collection("users")
-        //     .document(_user.uid)
-        //     .collection("tasks")
-        //     .document()
-        //     .setData({});
       }
     });
   }
@@ -173,19 +167,18 @@ class TasksListView extends StatelessWidget {
               } else {
                 DocumentSnapshot doc = snapshot.data;
                 Map<String, dynamic> taskMap = doc.data["tasks"];
-                List<ListTile> tiles = taskMap.keys
-                    .map((e) => new ListTile(title: new Text("${e}")))
-                    .toList();
+                List<ListTile> tiles = taskMap.values.map((task) {
+                  return new ListTile(
+                      title: new Text("${task["name"]}"),
+                      subtitle: new Text(task["description"] ??
+                          "") // ?? is if null then do right side
+                      );
+                }).toList();
 
                 return new ListView(
                   children: tiles,
                 );
               }
-
-              return new Text(
-                  "${snapshot.data["tasks"].map((Map<String, dynamic> v) => v["name"])}");
-
-              return new Text("${snapshot.data["tasks"]["task1"].toString()}");
             });
       }
     }());
