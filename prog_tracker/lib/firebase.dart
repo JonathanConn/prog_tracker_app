@@ -86,7 +86,7 @@ class LoginAuth {
 
 class Task {
   String name;
-  int timeSpent;
+  int timeSpent, priority;
   Timestamp dueDate, startDate, endDate, createdDate;
   bool completed;
 
@@ -101,6 +101,7 @@ class Task {
 
     this.completed = false;
     this.timeSpent = 0;
+    this.priority = 0;
   }
 }
 
@@ -150,6 +151,28 @@ class Database {
 }
 
 class TasksListView extends StatelessWidget {
+  Icon getPriorityIcon(int _priority) {
+    List<Icon> priorityIcons = [
+      Icon(
+        Icons.lens,
+        color: Colors.green,
+      ),
+      Icon(
+        Icons.lens,
+        color: Colors.yellow,
+      ),
+      Icon(
+        Icons.lens,
+        color: Colors.red,
+      ),
+    ];
+    if (_priority >= 0 && _priority < priorityIcons.length) {
+      return priorityIcons[_priority];
+    } else {
+      return priorityIcons[0]; //default
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return (() {
@@ -169,10 +192,11 @@ class TasksListView extends StatelessWidget {
                 Map<String, dynamic> taskMap = doc.data["tasks"];
                 List<ListTile> tiles = taskMap.values.map((task) {
                   return new ListTile(
-                      title: new Text("${task["name"]}"),
-                      subtitle: new Text(task["description"] ??
-                          "") // ?? is if null then do right side
-                      );
+                    title: new Text("${task["name"]}"),
+                    // ?? is if null then do right side
+                    subtitle: new Text(task["description"] ?? ""),
+                    leading: getPriorityIcon(task["priority"] ?? 0),
+                  );
                 }).toList();
 
                 return new ListView(
