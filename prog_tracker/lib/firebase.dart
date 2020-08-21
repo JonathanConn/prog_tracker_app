@@ -152,7 +152,7 @@ class Database {
 
 class TasksListView extends StatelessWidget {
   Icon getPriorityIcon(int _priority) {
-    List<Icon> priorityIcons = [
+    List<Icon> _priorityIcons = [
       Icon(
         Icons.lens,
         color: Colors.green,
@@ -166,10 +166,18 @@ class TasksListView extends StatelessWidget {
         color: Colors.red,
       ),
     ];
-    if (_priority >= 0 && _priority < priorityIcons.length) {
-      return priorityIcons[_priority];
+    if (_priority >= 0 && _priority < _priorityIcons.length) {
+      return _priorityIcons[_priority];
     } else {
-      return priorityIcons[0]; //default
+      return _priorityIcons[0]; //default
+    }
+  }
+
+  Icon getCompletedIcon(bool _completed) {
+    if (_completed) {
+      return Icon(Icons.check_box);
+    } else {
+      return Icon(Icons.check_box_outline_blank);
     }
   }
 
@@ -196,6 +204,7 @@ class TasksListView extends StatelessWidget {
                     // ?? is if null then do right side
                     subtitle: new Text(task["description"] ?? ""),
                     leading: getPriorityIcon(task["priority"] ?? 0),
+                    trailing: getCompletedIcon(task["completed"] ?? false),
                   );
                 }).toList();
 
