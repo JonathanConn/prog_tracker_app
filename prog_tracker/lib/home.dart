@@ -51,7 +51,7 @@ class _HomePageState extends State<HomePage> {
           Expanded(
               child: Container(
             child: TasksListView(),
-            color: Colors.yellow,
+            color: Colors.blueGrey,
           ))
         ],
       ),

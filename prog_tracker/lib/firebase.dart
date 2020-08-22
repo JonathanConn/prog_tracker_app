@@ -192,7 +192,6 @@ class Database {
 
   // finds task in db of user and returns task obj
   static Future<Task> getTask(String _taskName) async {
-    Task t;
     if (await checkUser(_user)) {
       Firestore.instance
           .collection("users")
@@ -202,7 +201,7 @@ class Database {
           .get()
           .then((val) {
         if (val.exists) {
-          t = Task.clone(
+          return Task.clone(
               val["name"],
               val["timeSpent"],
               val["priority"],
@@ -216,11 +215,23 @@ class Database {
         }
       });
     }
-    return t;
+    return null;
   }
 
   static void completeTask(String _taskName) async {
     if (await checkUser(_user)) {
+      try {
+        Firestore.instance
+            .collection("users")
+            .document(_user.uid)
+            .collection("tasks")
+            .document("$_taskName")
+            .updateData(
+          {"completed": true},
+        );
+      } catch (e) {
+        print(e);
+      }
     } else {
       print("USER NOT FOUND");
     }
