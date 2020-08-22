@@ -107,6 +107,26 @@ class Task {
     this.timeSpent = 0;
     this.priority = 0;
   }
+
+  Task.clone(
+      String name,
+      int timeSpent,
+      int priority,
+      Timestamp startDate,
+      Timestamp endDate,
+      Timestamp createdDate,
+      DateTime dueDate,
+      bool completed) {
+    this.name = name;
+    this.dueDate = dueDate;
+    this.priority = priority;
+    this.createdDate = createdDate;
+    this.startDate = startDate;
+    this.endDate = endDate;
+    this.completed = completed;
+    this.timeSpent = timeSpent;
+    this.priority = priority;
+  }
 }
 
 class Database {
@@ -129,7 +149,8 @@ class Database {
     }
   }
 
-  static void addTaskToUser(Task _task) async {
+  // adds to current signed in user
+  static void addTask(Task _task) async {
     if (await checkUser(_user)) {
       Firestore.instance
           .collection("users")
@@ -147,6 +168,35 @@ class Database {
         "priority": _task.priority
       }, merge: false); //will overwrite
     }
+  }
+
+  // finds task in db of user and returns task obj
+  static Future<Task> getTask(String _taskName) async {
+    Task t = null;
+    if (await checkUser(_user)) {
+      Firestore.instance
+          .collection("users")
+          .document(_user.uid)
+          .collection("tasks")
+          .document("$_taskName")
+          .get()
+          .then((val) {
+        if (val.exists) {
+          t = Task.clone(
+              val["name"],
+              val["timeSpent"],
+              val["priority"],
+              val["startDate"],
+              val["endDate"],
+              val["createdDate"],
+              val["dueDate"],
+              val["completed"]);
+        } else {
+          print("task not found");
+        }
+      });
+    }
+    return t;
   }
 
   static void completeTask(String _taskName) async {
