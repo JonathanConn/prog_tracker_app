@@ -4,6 +4,7 @@ import 'graph.dart';
 import 'leaderboard.dart';
 import 'firebase.dart';
 import 'clock.dart';
+import 'completedIndicator.dart';
 import 'package:flutter/cupertino.dart';
 
 class HomePage extends StatefulWidget {
@@ -33,31 +34,27 @@ class _HomePageState extends State<HomePage> {
           MaterialPageRoute(builder: (context) => TaskForm()),
         ),
       ),
-      body: Container(
-          color: Colors.red,
-          child: Column(
-            children: <Widget>[
-              Expanded(
-                child: Container(
-                  child: GaugeChart.withSampleData(),
-                ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Expanded(
+            child: Container(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  completedBar(),
+                ],
               ),
-              RaisedButton(
-                onPressed: null,
-                color: Colors.grey,
-                child: Text(
-                  "Start",
-                  style: TextStyle(fontSize: 20),
-                ),
-              ),
-              Expanded(
-                child: Container(
-                  color: Colors.yellow,
-                  child: TasksListView(),
-                ),
-              )
-            ],
-          )),
+              color: Colors.pink,
+            ),
+          ),
+          Expanded(
+              child: Container(
+            child: TasksListView(),
+            color: Colors.yellow,
+          ))
+        ],
+      ),
     );
   }
 }

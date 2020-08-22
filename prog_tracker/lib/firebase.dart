@@ -209,7 +209,6 @@ class TasksListView extends StatelessWidget {
               }
               Map<String, dynamic> taskMap = doc.data;
               List<ListTile> tiles = new List<ListTile>();
-              // print(taskMap["tasks"].toString());
 
               taskMap["tasks"].forEach((key, value) {
                 tiles.add(
@@ -222,17 +221,6 @@ class TasksListView extends StatelessWidget {
                   ),
                 );
               });
-
-              // taskMap["tasks"].map((key, task) {
-              //   return new ListTile(
-              //     title: new Text("test"),
-              //     // title: new Text(task["name"] ?? "TaskName"),
-              //     // // ?? is if null then do right side
-              //     // subtitle: new Text(task["description"] ?? ""),
-              //     // leading: getPriorityIcon(task["priority"] ?? 0),
-              //     // trailing: getCompletedIcon(task["completed"] ?? false),
-              //   );
-              // }).toList();
 
               return new ListView(
                 children: tiles,
