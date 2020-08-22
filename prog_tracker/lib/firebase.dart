@@ -110,63 +110,50 @@ class Task {
 }
 
 class Database {
-  static void addUserToDatabase(FirebaseUser _user) {
-    print(_user.uid);
-    print(_user.uid.toString());
-
-    // if user not in database add them
-    Firestore.instance
-        .collection("users")
-        .document(_user.uid)
-        .get()
-        .then((value) {
-      if (!value.exists) {
-        Firestore.instance.collection("users").document(_user.uid).setData(
-            {"name": _user.uid.toString(), "score": 0, "tasks": {}},
-            merge: false // merge true overrites data
-            );
-      }
-    });
+  static Future<bool> checkUser(FirebaseUser _user) async {
+    try {
+      var collectionRef = Firestore.instance.collection("users");
+      var doc = await collectionRef.document(_user.uid).get();
+      return doc.exists;
+    } catch (e) {
+      print(e);
+    }
   }
 
-  static void addTaskToUser(Task _task) {
-    Firestore.instance
-        .collection("users")
-        .document(_user.uid)
-        .get()
-        .then((value) {
-      if (value.exists) {
-        Firestore.instance.collection("users").document(_user.uid).setData({
-          "tasks": {
-            "$_task.name": {
-              "name": _task.name,
-              "dueDate": _task.dueDate,
-              "timeSpent": _task.timeSpent,
-              "completed": _task.completed,
-              "createdDate": _task.createdDate,
-              "startDate": _task.startDate,
-              "endDate": _task.endDate,
-              "priority": _task.priority
-            }
-          }
-        }, merge: true);
-      } else {
-        print("USER NOT FOUND");
-      }
-    });
+  static void addUserToDatabase(FirebaseUser _user) async {
+    if (await checkUser(_user)) {
+      Firestore.instance.collection("users").document(_user.uid).setData(
+          {"name": _user.uid.toString(), "score": 0, "tasks": {}},
+          merge: false // merge true overrites data
+          );
+    }
   }
 
-  static void completeTask(String _taskName) {
-    Firestore.instance
-        .collection("users")
-        .document(_user.uid)
-        .get()
-        .then((value) {
-      if (value.exists) {
-      } else {
-        print("USER NOT FOUND");
-      }
-    });
+  static void addTaskToUser(Task _task) async {
+    if (await checkUser(_user)) {
+      Firestore.instance
+          .collection("users")
+          .document(_user.uid)
+          .collection("tasks")
+          .document("${_task.name}")
+          .setData({
+        "name": _task.name,
+        "dueDate": _task.dueDate,
+        "timeSpent": _task.timeSpent,
+        "completed": _task.completed,
+        "createdDate": _task.createdDate,
+        "startDate": _task.startDate,
+        "endDate": _task.endDate,
+        "priority": _task.priority
+      }, merge: false); //will overwrite
+    }
+  }
+
+  static void completeTask(String _taskName) async {
+    if (await checkUser(_user)) {
+    } else {
+      print("USER NOT FOUND");
+    }
   }
 }
 
