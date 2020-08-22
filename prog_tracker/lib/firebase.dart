@@ -130,15 +130,12 @@ class Database {
   }
 
   static void addTaskToUser(Task _task) {
-    print("Before TASK TO STR: ${_task.toString()}");
-    print(_userID.toString());
     Firestore.instance
         .collection("users")
         .document(_user.uid)
         .get()
         .then((value) {
       if (value.exists) {
-        print("TASK TO STR: ${_task.toString()}");
         Firestore.instance.collection("users").document(_user.uid).setData({
           "tasks": {
             "$_task.name": {
@@ -153,6 +150,19 @@ class Database {
             }
           }
         }, merge: true);
+      } else {
+        print("USER NOT FOUND");
+      }
+    });
+  }
+
+  static void completeTask(String _taskName) {
+    Firestore.instance
+        .collection("users")
+        .document(_user.uid)
+        .get()
+        .then((value) {
+      if (value.exists) {
       } else {
         print("USER NOT FOUND");
       }
@@ -217,7 +227,10 @@ class TasksListView extends StatelessWidget {
                     // ?? is if null then do right side
                     subtitle: new Text(value["description"] ?? ""),
                     leading: getPriorityIcon(value["priority"] ?? 0),
-                    trailing: getCompletedIcon(value["completed"] ?? false),
+                    // trailing: getCompletedIcon(value["completed"] ?? false),
+                    trailing: TaskMenu(
+                      taskName: value["name"],
+                    ),
                   ),
                 );
               });
@@ -228,5 +241,49 @@ class TasksListView extends StatelessWidget {
             });
       }
     }());
+  }
+}
+
+enum TaskMenuOptions { complete, edit }
+
+class TaskMenu extends StatefulWidget {
+  final String taskName;
+  TaskMenu({Key key, this.taskName}) : super(key: key);
+
+  @override
+  _TaskMenuState createState() => _TaskMenuState();
+}
+
+class _TaskMenuState extends State<TaskMenu> {
+  @override
+  Widget build(BuildContext context) {
+    return PopupMenuButton<TaskMenuOptions>(
+      onSelected: (TaskMenuOptions result) {
+        setState(() {
+          switch (result) {
+            case TaskMenuOptions.complete:
+              {
+                Database.completeTask(widget.taskName);
+              }
+              break;
+            case TaskMenuOptions.edit:
+              {
+                print("pressed edit");
+              }
+              break;
+          }
+        });
+      },
+      itemBuilder: (BuildContext context) => <PopupMenuEntry<TaskMenuOptions>>[
+        const PopupMenuItem<TaskMenuOptions>(
+          value: TaskMenuOptions.complete,
+          child: Text('Complete'),
+        ),
+        const PopupMenuItem<TaskMenuOptions>(
+          value: TaskMenuOptions.edit,
+          child: Text('Edit'),
+        ),
+      ],
+    );
   }
 }
