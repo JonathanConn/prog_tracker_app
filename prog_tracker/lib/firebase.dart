@@ -203,25 +203,40 @@ class TasksListView extends StatelessWidget {
                 .document(_userID)
                 .snapshots(),
             builder: (context, snapshot) {
-              if (snapshot.data["tasks"].toString() == "{}") {
-                return new Text("No tasks :) ");
-              } else {
-                DocumentSnapshot doc = snapshot.data;
-                Map<String, dynamic> taskMap = doc.data["tasks"];
-                List<ListTile> tiles = taskMap.values.map((task) {
-                  return new ListTile(
-                    title: new Text("${task["name"]}"),
-                    // ?? is if null then do right side
-                    subtitle: new Text(task["description"] ?? ""),
-                    leading: getPriorityIcon(task["priority"] ?? 0),
-                    trailing: getCompletedIcon(task["completed"] ?? false),
-                  );
-                }).toList();
-
-                return new ListView(
-                  children: tiles,
-                );
+              DocumentSnapshot doc = snapshot.data;
+              if (doc == null) {
+                return new Text("No tasks");
               }
+              Map<String, dynamic> taskMap = doc.data;
+              List<ListTile> tiles = new List<ListTile>();
+              // print(taskMap["tasks"].toString());
+
+              taskMap["tasks"].forEach((key, value) {
+                tiles.add(
+                  ListTile(
+                    title: new Text(value["name"] ?? "TaskName"),
+                    // ?? is if null then do right side
+                    subtitle: new Text(value["description"] ?? ""),
+                    leading: getPriorityIcon(value["priority"] ?? 0),
+                    trailing: getCompletedIcon(value["completed"] ?? false),
+                  ),
+                );
+              });
+
+              // taskMap["tasks"].map((key, task) {
+              //   return new ListTile(
+              //     title: new Text("test"),
+              //     // title: new Text(task["name"] ?? "TaskName"),
+              //     // // ?? is if null then do right side
+              //     // subtitle: new Text(task["description"] ?? ""),
+              //     // leading: getPriorityIcon(task["priority"] ?? 0),
+              //     // trailing: getCompletedIcon(task["completed"] ?? false),
+              //   );
+              // }).toList();
+
+              return new ListView(
+                children: tiles,
+              );
             });
       }
     }());
