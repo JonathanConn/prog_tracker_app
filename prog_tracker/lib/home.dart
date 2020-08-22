@@ -146,7 +146,7 @@ class _TaskFormState extends State<TaskForm> {
                         _formKey.currentState.save();
                         Task t = new Task(
                             _name.text, _date, _selectedPriority.index);
-                        Database.addTaskToUser(t);
+                        Database.addTask(t);
                       }),
                 ],
               ),

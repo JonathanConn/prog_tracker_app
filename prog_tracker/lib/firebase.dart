@@ -1,3 +1,5 @@
+import 'dart:html';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -166,13 +168,33 @@ class Database {
         "startDate": _task.startDate,
         "endDate": _task.endDate,
         "priority": _task.priority
-      }, merge: false); //will overwrite
+      }, merge: false); //will not overwrite
+    }
+  }
+
+  static void setTask(Task _task) async {
+    if (await checkUser(_user)) {
+      Firestore.instance
+          .collection("users")
+          .document(_user.uid)
+          .collection("tasks")
+          .document("${_task.name}")
+          .setData({
+        "name": _task.name,
+        "dueDate": _task.dueDate,
+        "timeSpent": _task.timeSpent,
+        "completed": _task.completed,
+        "createdDate": _task.createdDate,
+        "startDate": _task.startDate,
+        "endDate": _task.endDate,
+        "priority": _task.priority
+      }, merge: true); //will overwrite
     }
   }
 
   // finds task in db of user and returns task obj
   static Future<Task> getTask(String _taskName) async {
-    Task t = null;
+    Task t;
     if (await checkUser(_user)) {
       Firestore.instance
           .collection("users")
@@ -245,37 +267,32 @@ class TasksListView extends StatelessWidget {
         return new Text("Sign in first plz");
       } else {
         return new StreamBuilder(
-            stream: Firestore.instance
-                .collection("users")
-                .document(_userID)
-                .snapshots(),
-            builder: (context, snapshot) {
-              DocumentSnapshot doc = snapshot.data;
-              if (doc == null) {
-                return new Text("No tasks");
-              }
-              Map<String, dynamic> taskMap = doc.data;
-              List<ListTile> tiles = new List<ListTile>();
+          stream: Firestore.instance
+              .collection("users")
+              .document(_userID)
+              .collection("tasks")
+              .snapshots(),
+          builder: (context, snapshot) {
+            if (snapshot.hasError) return new Text('Error: ${snapshot.error}');
+            if (snapshot.data == null) return new Text("No tasks :)");
 
-              taskMap["tasks"].forEach((key, value) {
-                tiles.add(
-                  ListTile(
-                    title: new Text(value["name"] ?? "TaskName"),
-                    // ?? is if null then do right side
-                    subtitle: new Text(value["description"] ?? ""),
-                    leading: getPriorityIcon(value["priority"] ?? 0),
-                    // trailing: getCompletedIcon(value["completed"] ?? false),
-                    trailing: TaskMenu(
-                      taskName: value["name"],
-                    ),
-                  ),
+            switch (snapshot.connectionState) {
+              case ConnectionState.waiting:
+                return new Text('Loading...');
+              default:
+                return new ListView(
+                  children:
+                      snapshot.data.documents.map((DocumentSnapshot value) {
+                    return new ListTile(
+                        title: new Text(value["name"] ?? "TaskName"),
+                        subtitle: new Text(value["description"] ?? ""),
+                        leading: getPriorityIcon(value["priority"] ?? 0),
+                        trailing: TaskMenu(taskName: value["name"]));
+                  }).toList(),
                 );
-              });
-
-              return new ListView(
-                children: tiles,
-              );
-            });
+            }
+          },
+        );
       }
     }());
   }
