@@ -118,7 +118,7 @@ class Task {
     this.priority = 0;
   }
 
-  Task.clone(
+  Task.copy(
       String name,
       String description,
       int timeSpent,
@@ -138,6 +138,19 @@ class Task {
     this.completed = completed;
     this.timeSpent = timeSpent;
     this.priority = priority;
+  }
+
+  Task.clone(Task _oldTask) {
+    this.name = _oldTask.name;
+    this.description = _oldTask.description;
+    this.dueDate = _oldTask.dueDate;
+    this.priority = _oldTask.priority;
+    this.createdDate = _oldTask.createdDate;
+    this.startDate = _oldTask.startDate;
+    this.endDate = _oldTask.endDate;
+    this.completed = _oldTask.completed;
+    this.timeSpent = _oldTask.timeSpent;
+    this.priority = _oldTask.priority;
   }
 }
 
@@ -182,23 +195,32 @@ class Database {
     }
   }
 
-  static void setTask(Task _task) async {
+  static void setTask(Task _oldTask, Task _newTask) async {
     if (await checkUser(_user)) {
+      // Add new info
       Firestore.instance
           .collection("users")
           .document(_user.uid)
           .collection("tasks")
-          .document("${_task.name}")
+          .document("${_newTask.name}")
           .setData({
-        "name": _task.name,
-        "dueDate": _task.dueDate,
-        "timeSpent": _task.timeSpent,
-        "completed": _task.completed,
-        "createdDate": _task.createdDate,
-        "startDate": _task.startDate,
-        "endDate": _task.endDate,
-        "priority": _task.priority
+        "name": _newTask.name ?? _oldTask.name,
+        "dueDate": _newTask.dueDate,
+        "timeSpent": _newTask.timeSpent,
+        "completed": _newTask.completed,
+        "createdDate": _newTask.createdDate,
+        "startDate": _newTask.startDate,
+        "endDate": _newTask.endDate,
+        "priority": _newTask.priority
       }, merge: true); //will overwrite
+
+      // remove old info
+      Firestore.instance
+          .collection("users")
+          .document(_user.uid)
+          .collection("tasks")
+          .document("${_oldTask.name}")
+          .delete();
     }
   }
 
@@ -243,7 +265,7 @@ class Database {
   }
 
   static Task buildTaskFromDocSnap(DocumentSnapshot val) {
-    return Task.clone(
+    return Task.copy(
         val["name"],
         val["description"],
         val["timeSpent"],
@@ -384,7 +406,7 @@ enum PriorityRadio { low, med, high }
 
 class EditTaskForm extends StatefulWidget {
   final Task task;
-  EditTaskForm({Key key, this.task}) : super(key: key);
+  EditTaskForm({Key key, @required this.task}) : super(key: key);
 
   @override
   _EditTaskFormState createState() => _EditTaskFormState();
@@ -393,14 +415,20 @@ class EditTaskForm extends StatefulWidget {
 class _EditTaskFormState extends State<EditTaskForm> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _name = new TextEditingController();
-  DateTime _date = new DateTime.now();
 
+  Task _oldTask;
+  DateTime _date = new DateTime.now();
   PriorityRadio _selectedPriority = PriorityRadio.med;
 
   @override
+  void initState() {
+    _oldTask = Task.clone(widget.task);
+    _selectedPriority = PriorityRadio.values[_oldTask.priority ?? 0];
+    _name.text = widget.task.name.toString();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    print(widget.task);
-    _selectedPriority = PriorityRadio.values[widget.task.priority ?? 0];
     return Scaffold(
       appBar: AppBar(
         title: new Text("Edit Task"),
@@ -415,8 +443,6 @@ class _EditTaskFormState extends State<EditTaskForm> {
                   TextFormField(
                     controller: _name,
                     keyboardType: TextInputType.emailAddress,
-                    decoration:
-                        InputDecoration(labelText: widget.task.name.toString()),
                   ),
                   Container(
                     height: 200,
@@ -470,9 +496,17 @@ class _EditTaskFormState extends State<EditTaskForm> {
                       child: Text("Edit task"),
                       onPressed: () async {
                         _formKey.currentState.save();
-                        Task t = new Task(_name.text, Timestamp.fromDate(_date),
-                            _selectedPriority.index);
-                        Database.addTask(t);
+                        if (_name.text != widget.task.name)
+                          widget.task.name = _name.text;
+
+                        if (Timestamp.fromDate(_date) != widget.task.dueDate)
+                          widget.task.dueDate = Timestamp.fromDate(_date);
+
+                        if (widget.task.priority != _selectedPriority.index)
+                          widget.task.priority = _selectedPriority.index;
+
+                        Database.setTask(_oldTask, widget.task);
+                        Navigator.pop(context);
                       }),
                 ],
               ),
