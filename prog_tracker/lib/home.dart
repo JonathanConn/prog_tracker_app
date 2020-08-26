@@ -148,6 +148,7 @@ class _TaskFormState extends State<TaskForm> {
                         Task t = new Task(_name.text, Timestamp.fromDate(_date),
                             _selectedPriority.index);
                         Database.addTask(t);
+                        Navigator.pop(context);
                       }),
                 ],
               ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart';
+import 'firebase.dart';
 
 class completedBar extends StatefulWidget {
   completedBar({Key key}) : super(key: key);
@@ -11,14 +12,24 @@ class completedBar extends StatefulWidget {
 class _completedBarState extends State<completedBar> {
   @override
   Widget build(BuildContext context) {
-    return LinearPercentIndicator(
-      width: 300,
-      lineHeight: 20,
-      percent: 0.5,
-      animation: true,
-      animationDuration: 500,
-      backgroundColor: Colors.white,
-      progressColor: Colors.green,
-    );
+    return FutureBuilder(
+        future: Database.getTasksCompletedRatio(),
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (snapshot.hasData) {
+            return new LinearPercentIndicator(
+              width: 300,
+              lineHeight: 20,
+              percent: snapshot.data == 0.0 ? 0.05 : snapshot.data,
+              animation: true,
+              animationDuration: 500,
+              backgroundColor: Colors.white,
+              progressColor: Colors.green,
+            );
+          } else if (snapshot.hasError) {
+            return new Text("error");
+          } else {
+            return new Text("loading...");
+          }
+        });
   }
 }

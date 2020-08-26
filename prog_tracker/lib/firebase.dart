@@ -193,6 +193,23 @@ class Database {
         "priority": _task.priority
       }, merge: false); //will not overwrite
     }
+    if (await checkUser(_user)) {
+      Firestore.instance
+          .collection("users")
+          .document(_user.uid)
+          .collection("tasks")
+          .document("${_task.name}")
+          .setData({
+        "name": _task.name,
+        "dueDate": _task.dueDate,
+        "timeSpent": _task.timeSpent,
+        "completed": _task.completed,
+        "createdDate": _task.createdDate,
+        "startDate": _task.startDate,
+        "endDate": _task.endDate,
+        "priority": _task.priority
+      }, merge: false); //will not overwrite
+    }
   }
 
   static void setTask(Task _oldTask, Task _newTask) async {
@@ -277,6 +294,26 @@ class Database {
         val["createdDate"],
         val["dueDate"],
         val["completed"]);
+  }
+
+  static Future<double> getTasksCompletedRatio() async {
+    if (_user != null) {
+      if (await checkUser(_user)) {
+        return await Firestore.instance
+            .collection("users")
+            .document(_user.uid)
+            .collection("tasks")
+            .getDocuments()
+            .then((val) {
+          int total = 0, completed = 0;
+          val.documents.forEach((task) {
+            total += 1;
+            if (task["completed"] == true) completed += 1;
+          });
+          return completed / total;
+        });
+      }
+    }
   }
 }
 
@@ -370,7 +407,7 @@ class _TaskMenuState extends State<TaskMenu> {
   Widget build(BuildContext context) {
     return PopupMenuButton<TaskMenuOptions>(
       onSelected: (TaskMenuOptions result) {
-        setState(() async {
+        setState(() {
           switch (result) {
             case TaskMenuOptions.complete:
               {
