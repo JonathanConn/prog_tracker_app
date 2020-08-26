@@ -214,13 +214,15 @@ class Database {
         "priority": _newTask.priority
       }, merge: true); //will overwrite
 
-      // remove old info
-      Firestore.instance
-          .collection("users")
-          .document(_user.uid)
-          .collection("tasks")
-          .document("${_oldTask.name}")
-          .delete();
+      if (_oldTask.name != _newTask.name) {
+        // remove old info
+        Firestore.instance
+            .collection("users")
+            .document(_user.uid)
+            .collection("tasks")
+            .document("${_oldTask.name}")
+            .delete();
+      }
     }
   }
 
