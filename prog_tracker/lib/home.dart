@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'graph.dart';
@@ -144,8 +145,8 @@ class _TaskFormState extends State<TaskForm> {
                       child: Text('Create task'),
                       onPressed: () async {
                         _formKey.currentState.save();
-                        Task t = new Task(
-                            _name.text, _date, _selectedPriority.index);
+                        Task t = new Task(_name.text, Timestamp.fromDate(_date),
+                            _selectedPriority.index);
                         Database.addTask(t);
                       }),
                 ],

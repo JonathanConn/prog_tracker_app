@@ -1,7 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:prog_tracker/home.dart';
 
 final GoogleSignIn _googleSignIn = GoogleSignIn();
 final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -84,15 +86,23 @@ class LoginAuth {
   }
 }
 
+/*
+Timestamp to DateTime => 
+DateTime t = time.toDate();
+
+DateTime to TimeStamp =>
+Timestamp t = Timestamp.fromDate(time);
+*/
+
 class Task {
-  String name;
+  String name, description;
   int timeSpent, priority;
-  Timestamp startDate, endDate, createdDate;
-  DateTime dueDate;
+  Timestamp startDate, endDate, createdDate, dueDate;
   bool completed;
 
-  Task(String name, DateTime dueDate, int priority) {
+  Task(String name, Timestamp dueDate, int priority) {
     this.name = name;
+    this.description = "";
     this.dueDate = dueDate;
     this.priority = priority;
 
@@ -110,14 +120,16 @@ class Task {
 
   Task.clone(
       String name,
+      String description,
       int timeSpent,
       int priority,
       Timestamp startDate,
       Timestamp endDate,
       Timestamp createdDate,
-      DateTime dueDate,
+      Timestamp dueDate,
       bool completed) {
     this.name = name;
+    this.description = description;
     this.dueDate = dueDate;
     this.priority = priority;
     this.createdDate = createdDate;
@@ -143,7 +155,7 @@ class Database {
   static void addUserToDatabase(FirebaseUser _user) async {
     if (await checkUser(_user)) {
       Firestore.instance.collection("users").document(_user.uid).setData(
-          {"name": _user.uid.toString(), "score": 0, "tasks": {}},
+          {"name": _user.uid.toString(), "score": 0},
           merge: false // merge true overrites data
           );
     }
@@ -200,16 +212,9 @@ class Database {
           .document("$_taskName")
           .get()
           .then((val) {
+        print("VALUE ${val.data}");
         if (val.exists) {
-          return Task.clone(
-              val["name"],
-              val["timeSpent"],
-              val["priority"],
-              val["startDate"],
-              val["endDate"],
-              val["createdDate"],
-              val["dueDate"],
-              val["completed"]);
+          return buildTaskFromDocSnap(val);
         } else {
           print("task not found");
         }
@@ -235,6 +240,19 @@ class Database {
     } else {
       print("USER NOT FOUND");
     }
+  }
+
+  static Task buildTaskFromDocSnap(DocumentSnapshot val) {
+    return Task.clone(
+        val["name"],
+        val["description"],
+        val["timeSpent"],
+        val["priority"],
+        val["startDate"],
+        val["endDate"],
+        val["createdDate"],
+        val["dueDate"],
+        val["completed"]);
   }
 }
 
@@ -292,11 +310,17 @@ class TasksListView extends StatelessWidget {
                 return new ListView(
                   children: snapshot.data.documents
                       .map<Widget>((DocumentSnapshot value) {
+                    // get task obj from each doc in snapshot
+                    Task t = Database.buildTaskFromDocSnap(value);
+
                     return new ListTile(
-                        title: new Text(value["name"] ?? "TaskName"),
-                        subtitle: new Text(value["description"] ?? ""),
-                        leading: getPriorityIcon(value["priority"] ?? 0),
-                        trailing: TaskMenu(taskName: value["name"]));
+                        // create new list tile for each task in doc
+                        title: new Text(t.name ?? "TaskName"),
+                        subtitle: new Text(t.description ?? ""),
+                        leading: getPriorityIcon(t.priority ?? 0),
+                        trailing: TaskMenu(
+                          task: t,
+                        ));
                   }).toList(),
                 );
             }
@@ -310,8 +334,8 @@ class TasksListView extends StatelessWidget {
 enum TaskMenuOptions { complete, edit }
 
 class TaskMenu extends StatefulWidget {
-  final String taskName;
-  TaskMenu({Key key, this.taskName}) : super(key: key);
+  final Task task;
+  TaskMenu({Key key, this.task}) : super(key: key);
 
   @override
   _TaskMenuState createState() => _TaskMenuState();
@@ -322,16 +346,21 @@ class _TaskMenuState extends State<TaskMenu> {
   Widget build(BuildContext context) {
     return PopupMenuButton<TaskMenuOptions>(
       onSelected: (TaskMenuOptions result) {
-        setState(() {
+        setState(() async {
           switch (result) {
             case TaskMenuOptions.complete:
               {
-                Database.completeTask(widget.taskName);
+                Database.completeTask(widget.task.name);
               }
               break;
             case TaskMenuOptions.edit:
               {
-                print("pressed edit");
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => EditTaskForm(
+                              task: widget.task,
+                            )));
               }
               break;
           }
@@ -347,6 +376,110 @@ class _TaskMenuState extends State<TaskMenu> {
           child: Text('Edit'),
         ),
       ],
+    );
+  }
+}
+
+enum PriorityRadio { low, med, high }
+
+class EditTaskForm extends StatefulWidget {
+  final Task task;
+  EditTaskForm({Key key, this.task}) : super(key: key);
+
+  @override
+  _EditTaskFormState createState() => _EditTaskFormState();
+}
+
+class _EditTaskFormState extends State<EditTaskForm> {
+  final _formKey = GlobalKey<FormState>();
+  final TextEditingController _name = new TextEditingController();
+  DateTime _date = new DateTime.now();
+
+  PriorityRadio _selectedPriority = PriorityRadio.med;
+
+  @override
+  Widget build(BuildContext context) {
+    print(widget.task);
+    _selectedPriority = PriorityRadio.values[widget.task.priority ?? 0];
+    return Scaffold(
+      appBar: AppBar(
+        title: new Text("Edit Task"),
+      ),
+      body: Center(
+        child: Column(
+          children: [
+            Form(
+              key: _formKey,
+              child: Column(
+                children: <Widget>[
+                  TextFormField(
+                    controller: _name,
+                    keyboardType: TextInputType.emailAddress,
+                    decoration:
+                        InputDecoration(labelText: widget.task.name.toString()),
+                  ),
+                  Container(
+                    height: 200,
+                    child: CupertinoDatePicker(
+                      mode: CupertinoDatePickerMode.dateAndTime,
+                      initialDateTime: widget.task.dueDate.toDate(),
+                      onDateTimeChanged: (DateTime newDateTime) {
+                        _date = newDateTime;
+                      },
+                      use24hFormat: false,
+                      minuteInterval: 1,
+                    ),
+                  ),
+                  ListTile(
+                    title: new Text("Low"),
+                    leading: Radio(
+                      value: PriorityRadio.low,
+                      groupValue: _selectedPriority,
+                      onChanged: (PriorityRadio value) {
+                        setState(() {
+                          _selectedPriority = value;
+                        });
+                      },
+                    ),
+                  ),
+                  ListTile(
+                    title: new Text("Med"),
+                    leading: Radio(
+                      value: PriorityRadio.med,
+                      groupValue: _selectedPriority,
+                      onChanged: (PriorityRadio value) {
+                        setState(() {
+                          _selectedPriority = value;
+                        });
+                      },
+                    ),
+                  ),
+                  ListTile(
+                    title: new Text("High"),
+                    leading: Radio(
+                      value: PriorityRadio.high,
+                      groupValue: _selectedPriority,
+                      onChanged: (PriorityRadio value) {
+                        setState(() {
+                          _selectedPriority = value;
+                        });
+                      },
+                    ),
+                  ),
+                  RaisedButton(
+                      child: Text("Edit task"),
+                      onPressed: () async {
+                        _formKey.currentState.save();
+                        Task t = new Task(_name.text, Timestamp.fromDate(_date),
+                            _selectedPriority.index);
+                        Database.addTask(t);
+                      }),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
