@@ -323,7 +323,7 @@ class Database {
   }
 }
 
-class TasksListView extends StatelessWidget {
+class NotCompletedTasksListView extends StatelessWidget {
   Icon getPriorityIcon(int _priority) {
     List<Icon> _priorityIcons = [
       Icon(
@@ -346,11 +346,72 @@ class TasksListView extends StatelessWidget {
     }
   }
 
-  Icon getCompletedIcon(bool _completed) {
-    if (_completed) {
-      return Icon(Icons.check_box);
+  @override
+  Widget build(BuildContext context) {
+    return (() {
+      if (_userID == null) {
+        return new Text("Sign in first plz");
+      } else {
+        return new StreamBuilder(
+          stream: Firestore.instance
+              .collection("users")
+              .document(_userID)
+              .collection("tasks")
+              .where("completed", isEqualTo: false)
+              .orderBy("priority", descending: true)
+              .snapshots(),
+          builder: (context, snapshot) {
+            if (snapshot.hasError) return new Text('Error: ${snapshot.error}');
+            if (snapshot.data == null) return new Text("No tasks :)");
+
+            switch (snapshot.connectionState) {
+              case ConnectionState.waiting:
+                return new Text('Loading...');
+              default:
+                return new ListView(
+                  children: snapshot.data.documents
+                      .map<Widget>((DocumentSnapshot value) {
+                    // get task obj from each doc in snapshot
+                    Task t = Database.buildTaskFromDocSnap(value);
+
+                    return new ListTile(
+                        // create new list tile for each task in doc
+                        title: new Text(t.name ?? "TaskName"),
+                        subtitle: new Text(t.description ?? ""),
+                        leading: getPriorityIcon(t.priority ?? 0),
+                        trailing: TaskMenu(
+                          task: t,
+                        ));
+                  }).toList(),
+                );
+            }
+          },
+        );
+      }
+    }());
+  }
+}
+
+class CompletedTasksListView extends StatelessWidget {
+  Icon getPriorityIcon(int _priority) {
+    List<Icon> _priorityIcons = [
+      Icon(
+        Icons.lens,
+        color: Colors.green,
+      ),
+      Icon(
+        Icons.lens,
+        color: Colors.yellow,
+      ),
+      Icon(
+        Icons.lens,
+        color: Colors.red,
+      ),
+    ];
+    if (_priority >= 0 && _priority < _priorityIcons.length) {
+      return _priorityIcons[_priority];
     } else {
-      return Icon(Icons.check_box_outline_blank);
+      return _priorityIcons[0]; //default
     }
   }
 
@@ -365,7 +426,7 @@ class TasksListView extends StatelessWidget {
               .collection("users")
               .document(_userID)
               .collection("tasks")
-              .where("completed", isEqualTo: false)
+              .where("completed", isEqualTo: true)
               .orderBy("priority", descending: true)
               .snapshots(),
           builder: (context, snapshot) {

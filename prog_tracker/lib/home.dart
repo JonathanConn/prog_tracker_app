@@ -17,46 +17,64 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.green,
-      appBar: AppBar(
-        title: ClockWidget(),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.emoji_events),
-            onPressed: () {
-              print('icon selected\n');
-            },
-          )
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => TaskForm()),
+        backgroundColor: Colors.grey,
+        appBar: AppBar(
+          title: ClockWidget(),
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(Icons.emoji_events),
+              onPressed: () {
+                print('icon selected\n');
+              },
+            )
+          ],
         ),
-      ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Expanded(
-            child: Container(
+        floatingActionButton: FloatingActionButton(
+          onPressed: () => Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => TaskForm()),
+          ),
+        ),
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Expanded(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   completedBar(),
                 ],
               ),
-              color: Colors.pink,
             ),
-          ),
-          Expanded(
-              child: Container(
-            child: TasksListView(),
-            color: Colors.blueGrey,
-          ))
-        ],
-      ),
-    );
+            Expanded(
+              child: NotCompletedTasksListView(),
+            ),
+            Expanded(
+              child: CompletedTasksListView(),
+            ),
+          ],
+        )
+
+        // Column(
+        //   mainAxisAlignment: MainAxisAlignment.center,
+        //   children: <Widget>[
+
+        //     Expanded(
+        //       child: Container(
+        //         child: Row(
+        //           mainAxisAlignment: MainAxisAlignment.center,
+        //           children: [
+        //             completedBar(),
+        //           ],
+        //         ),
+        //         color: Colors.pink,
+        //       ),
+        //     ),
+        //     // Expanded(child: TasksListView().NotCompletedList()),
+        //     // Expanded(child: TasksListView().CompletedList()),
+        //   ],
+        // ),
+        );
   }
 }
 

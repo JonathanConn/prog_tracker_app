@@ -28,7 +28,7 @@ class _completedBarState extends State<completedBar> {
           } else if (snapshot.hasError) {
             return new Text("error");
           } else {
-            return new Text("loading...");
+            return new Text("Sign in first");
           }
         });
   }
