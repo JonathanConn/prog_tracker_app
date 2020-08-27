@@ -365,6 +365,7 @@ class TasksListView extends StatelessWidget {
               .collection("users")
               .document(_userID)
               .collection("tasks")
+              .where("completed", isEqualTo: false)
               .orderBy("priority", descending: true)
               .snapshots(),
           builder: (context, snapshot) {
