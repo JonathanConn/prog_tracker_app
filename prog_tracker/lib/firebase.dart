@@ -86,6 +86,7 @@ class LoginAuth {
   }
 }
 
+class Task {
 /*
 Timestamp to DateTime => 
 DateTime t = time.toDate();
@@ -93,8 +94,6 @@ DateTime t = time.toDate();
 DateTime to TimeStamp =>
 Timestamp t = Timestamp.fromDate(time);
 */
-
-class Task {
   String name, description;
   int timeSpent, priority;
   Timestamp startDate, endDate, createdDate, dueDate;
@@ -154,6 +153,8 @@ class Task {
   }
 }
 
+// TODO: streak class stored as user subcollection
+
 class Database {
   static Future<bool> checkUser(FirebaseUser _user) async {
     try {
@@ -167,9 +168,14 @@ class Database {
 
   static void addUserToDatabase(FirebaseUser _user) async {
     if (await checkUser(_user)) {
-      Firestore.instance.collection("users").document(_user.uid).setData(
-          {"name": _user.uid.toString(), "score": 0},
-          merge: false // merge true overrites data
+      Firestore.instance.collection("users").document(_user.uid).setData({
+        "name": _user.uid.toString(),
+        "age": "",
+        "school": "",
+        "year": 0,
+        "degree": "",
+        "score": 0,
+      }, merge: false // merge true overrites data
           );
     }
   }

@@ -8,10 +8,11 @@ class Choice {
 }
 
 const List<Choice> choices = const <Choice>[
-  const Choice(title: 'Day', icon: Icons.timer),
-  const Choice(title: 'Week', icon: Icons.date_range),
-  const Choice(title: 'Month', icon: Icons.calendar_today),
-  const Choice(title: 'Year', icon: Icons.cake),
+  const Choice(title: 'All', icon: Icons.group),
+  const Choice(title: 'School', icon: Icons.school),
+  const Choice(title: 'Year', icon: Icons.calendar_today),
+  const Choice(title: 'Degree', icon: Icons.science),
+  const Choice(title: 'Age', icon: Icons.cake),
 ];
 
 class ChoiceCard extends StatelessWidget {
@@ -21,18 +22,9 @@ class ChoiceCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final TextStyle textStyle = Theme.of(context).textTheme.headline4;
     return Card(
-      color: Colors.white,
       child: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Icon(choice.icon, size: 128.0, color: textStyle.color),
-            Text(choice.title, style: textStyle),
-          ],
-        ),
+        child: DataBaseListView(),
       ),
     );
   }

@@ -4,13 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 void main() {
-
-  runApp(
-    MaterialApp( 
+  runApp(MaterialApp(
       home: Scaffold(
-        bottomNavigationBar: NavBarWidget(),
-        body: Container(color: Colors.yellow,),
-      )
-    )
-  );
+    bottomNavigationBar: NavBarWidget(),
+    body: Container(
+      color: Colors.yellow,
+    ),
+  )));
 }
+
+// TODO: add daily streak counter, break day earned every # days completed

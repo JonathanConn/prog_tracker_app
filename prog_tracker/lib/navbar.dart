@@ -16,7 +16,7 @@ class _NavBarWidgetState extends State<NavBarWidget> {
     HomePage(),
     LandingPage(),
   ];
-  
+
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -26,21 +26,19 @@ class _NavBarWidgetState extends State<NavBarWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       body: routes[_selectedIndex],
-
-      bottomNavigationBar: BottomNavigationBar (
+      bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
+            icon: Icon(Icons.emoji_events),
             title: Text('Score'),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.business),
+            icon: Icon(Icons.home),
             title: Text('Home'),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.school),
+            icon: Icon(Icons.face),
             title: Text('Profile'),
           ),
         ],
@@ -48,8 +46,6 @@ class _NavBarWidgetState extends State<NavBarWidget> {
         selectedItemColor: Colors.amber[800],
         onTap: _onItemTapped,
       ),
-
     );
-    
   }
 }
