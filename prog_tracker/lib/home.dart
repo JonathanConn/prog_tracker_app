@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:intl/intl.dart';
 import 'graph.dart';
 import 'leaderboard.dart';
 import 'firebase.dart';
@@ -19,10 +20,11 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
         backgroundColor: Colors.grey,
         appBar: AppBar(
-          title: ClockWidget(),
+          backgroundColor: Colors.black,
+          title: new Text(new DateFormat('EEEE M/d').format(DateTime.now())),
           actions: <Widget>[
             IconButton(
-              icon: Icon(Icons.emoji_events),
+              icon: Icon(Icons.settings),
               onPressed: () {
                 print('icon selected\n');
               },
@@ -39,18 +41,32 @@ class _HomePageState extends State<HomePage> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Expanded(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  completedBar(),
-                ],
+                child: Column(
+              children: [
+                new Padding(padding: EdgeInsets.all(20)),
+                new Padding(
+                  padding: EdgeInsets.all(30),
+                  child: new TimeWidget(),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    completedBar(),
+                  ],
+                ),
+              ],
+            )),
+            Expanded(
+              child: Padding(
+                padding: EdgeInsets.all(15),
+                child: NotCompletedTasksListView(),
               ),
             ),
             Expanded(
-              child: NotCompletedTasksListView(),
-            ),
-            Expanded(
-              child: CompletedTasksListView(),
+              child: Padding(
+                padding: EdgeInsets.all(15),
+                child: CompletedTasksListView(),
+              ),
             ),
           ],
         )

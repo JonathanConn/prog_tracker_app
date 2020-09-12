@@ -17,8 +17,8 @@ class _completedBarState extends State<completedBar> {
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.hasData) {
             return new LinearPercentIndicator(
-              width: 300,
-              lineHeight: 20,
+              width: 350,
+              lineHeight: 30,
               percent: snapshot.data == 0.0 ? 0.05 : snapshot.data,
               animation: true,
               animationDuration: 500,

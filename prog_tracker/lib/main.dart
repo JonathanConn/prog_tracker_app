@@ -7,9 +7,7 @@ void main() {
   runApp(MaterialApp(
       home: Scaffold(
     bottomNavigationBar: NavBarWidget(),
-    body: Container(
-      color: Colors.yellow,
-    ),
+    body: Container(),
   )));
 }
 

@@ -2,21 +2,19 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:intl/intl.dart';
 
-class Time {}
-
-class ClockWidget extends StatefulWidget {
-  ClockWidget({Key key}) : super(key: key);
+class TimeWidget extends StatefulWidget {
+  TimeWidget({Key key}) : super(key: key);
 
   @override
-  _ClockWidgetState createState() => _ClockWidgetState();
+  _TimeWidgetState createState() => _TimeWidgetState();
 }
 
-class _ClockWidgetState extends State<ClockWidget> {
+class _TimeWidgetState extends State<TimeWidget> {
   String _timeString;
   Timer _timer;
 
   String _formatDateTime(DateTime dateTime) {
-    return DateFormat('MM/dd/yyyy hh:mm:ss').format(dateTime);
+    return DateFormat('hh:mm:ss').format(dateTime);
   }
 
   void _getTime() {
@@ -36,7 +34,11 @@ class _ClockWidgetState extends State<ClockWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Text(_timeString);
+    return Text(
+      _timeString,
+      style: new TextStyle(
+          color: Colors.white, fontWeight: FontWeight.bold, fontSize: 50),
+    );
   }
 
   @override
