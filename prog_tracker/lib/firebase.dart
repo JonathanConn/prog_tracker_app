@@ -369,40 +369,51 @@ class NotCompletedTasksListView extends StatelessWidget {
               case ConnectionState.waiting:
                 return new Text('Loading...');
               default:
-                return new ListView(
-                  children: snapshot.data.documents
-                      .map<Widget>((DocumentSnapshot value) {
-                    // get task obj from each doc in snapshot
-                    Task t = Database.buildTaskFromDocSnap(value);
+                List<Widget> tiles = snapshot.data.documents
+                    .map<Widget>((DocumentSnapshot value) {
+                  // get task obj from each doc in snapshot
+                  Task t = Database.buildTaskFromDocSnap(value);
 
-                    return Container(
-                      child: Column(
-                        children: [
-                          Container(
-                            decoration: new BoxDecoration(
-                              color: globalDarkTheme().primaryColor,
-                              borderRadius:
-                                  new BorderRadius.all(Radius.circular(20)),
-                            ),
-                            child: new ListTile(
-                                // create new list tile for each task in doc
-                                shape: RoundedRectangleBorder(),
-                                title: new Text(
-                                  t.name ?? "Task",
-                                  style: Theme.of(context).textTheme.headline6,
-                                ),
-                                leading: getPriorityIcon(t.priority ?? 0),
-                                trailing: TaskMenu(
-                                  task: t,
-                                )),
+                  return Container(
+                    child: Column(
+                      children: [
+                        Container(
+                          decoration: new BoxDecoration(
+                            color: globalDarkTheme().primaryColor,
+                            borderRadius:
+                                new BorderRadius.all(Radius.circular(20)),
                           ),
-                          new Divider(
-                            color: Colors.transparent,
-                          ),
-                        ],
-                      ),
-                    );
-                  }).toList(),
+                          child: new ListTile(
+                              // create new list tile for each task in doc
+                              shape: RoundedRectangleBorder(),
+                              title: new Text(
+                                t.name ?? "Task",
+                                style: Theme.of(context).textTheme.headline6,
+                              ),
+                              leading: getPriorityIcon(t.priority ?? 0),
+                              trailing: TaskMenu(
+                                task: t,
+                              )),
+                        ),
+                        new Divider(
+                          color: Colors.transparent,
+                        ),
+                      ],
+                    ),
+                  );
+                }).toList();
+
+                // add header to listview
+                // tiles.insert(
+                //     0,
+                //     new ListTile(
+                //       onTap: null,
+                //       title: Row(children: <Widget>[
+                //         Expanded(child: Text("Today's Tasks:")),
+                //       ]),
+                //     ));
+                return new ListView(
+                  children: tiles,
                 );
             }
           },

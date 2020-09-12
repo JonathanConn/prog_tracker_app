@@ -32,6 +32,11 @@ class _HomePageState extends State<HomePage> {
         ),
         floatingActionButton: FloatingActionButton(
           backgroundColor: globalDarkTheme().accentColor,
+          child: Icon(
+            Icons.add,
+            size: 35,
+            color: globalDarkTheme().primaryColor,
+          ),
           onPressed: () => Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => TaskForm()),
@@ -41,56 +46,45 @@ class _HomePageState extends State<HomePage> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Expanded(
+                flex: 1,
                 child: Column(
-              children: [
-                new Padding(padding: EdgeInsets.all(20)),
-                new Padding(
-                  padding: EdgeInsets.all(30),
-                  child: new TimeWidget(),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    completedBar(),
+                    new Padding(padding: EdgeInsets.only(top: 20)),
+                    new Padding(
+                      padding: EdgeInsets.all(10),
+                      child: new TimeWidget(),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        completedBar(),
+                      ],
+                    ),
                   ],
-                ),
-              ],
-            )),
+                )),
+            new Text(
+              "Today's Tasks",
+              style: Theme.of(context).textTheme.headline5,
+            ),
             Expanded(
+              flex: 2,
               child: Padding(
-                padding: EdgeInsets.all(15),
+                padding: EdgeInsets.all(25),
                 child: NotCompletedTasksListView(),
               ),
             ),
+            new Text(
+              "Completed Tasks",
+              style: Theme.of(context).textTheme.headline5,
+            ),
             Expanded(
               child: Padding(
-                padding: EdgeInsets.all(15),
+                padding: EdgeInsets.all(25),
                 child: CompletedTasksListView(),
               ),
             ),
           ],
-        )
-
-        // Column(
-        //   mainAxisAlignment: MainAxisAlignment.center,
-        //   children: <Widget>[
-
-        //     Expanded(
-        //       child: Container(
-        //         child: Row(
-        //           mainAxisAlignment: MainAxisAlignment.center,
-        //           children: [
-        //             completedBar(),
-        //           ],
-        //         ),
-        //         color: Colors.pink,
-        //       ),
-        //     ),
-        //     // Expanded(child: TasksListView().NotCompletedList()),
-        //     // Expanded(child: TasksListView().CompletedList()),
-        //   ],
-        // ),
-        );
+        ));
   }
 }
 
