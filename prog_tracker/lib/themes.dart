@@ -6,7 +6,10 @@ const MaterialColor globalColors =
 
 ThemeData globalDarkTheme() {
   return ThemeData.dark().copyWith(
-    textTheme: GoogleFonts.robotoMonoTextTheme(),
+    textTheme: GoogleFonts.robotoMonoTextTheme().apply(
+      bodyColor: Colors.white,
+      displayColor: Colors.white,
+    ),
     accentColor: Colors.orange,
   );
 }

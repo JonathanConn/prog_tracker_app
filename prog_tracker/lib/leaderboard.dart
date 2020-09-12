@@ -76,12 +76,37 @@ class DataBaseListView extends StatelessWidget {
           case ConnectionState.waiting:
             return new Text('Loading...');
           default:
+            // return new ListView(
+            //   children:
+            //       snapshot.data.documents.map((DocumentSnapshot document) {
+            //     return new ListTile(
+            //       title: new Text(document['name']),
+            //       subtitle: new Text(document['score'].toString()),
+            //     );
+            //   }).toList(),
+            // );
             return new ListView(
-              children:
-                  snapshot.data.documents.map((DocumentSnapshot document) {
-                return new ListTile(
-                  title: new Text(document['name']),
-                  subtitle: new Text(document['score'].toString()),
+              children: snapshot.data.documents
+                  .map<Widget>((DocumentSnapshot document) {
+                return Container(
+                  child: Column(
+                    children: [
+                      Container(
+                        decoration: new BoxDecoration(
+                          color: globalDarkTheme().primaryColor,
+                          borderRadius:
+                              new BorderRadius.all(Radius.circular(20)),
+                        ),
+                        child: new ListTile(
+                          // create new list tile for each task in doc
+                          shape: RoundedRectangleBorder(),
+                          title: new Text(document['name'],
+                              style: Theme.of(context).textTheme.headline6),
+                          subtitle: new Text(document['score'].toString()),
+                        ),
+                      ),
+                    ],
+                  ),
                 );
               }).toList(),
             );
