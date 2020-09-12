@@ -5,10 +5,11 @@ import 'package:google_fonts/google_fonts.dart';
 
 void main() {
   runApp(MaterialApp(
+      theme: ThemeData.dark(),
       home: Scaffold(
-    bottomNavigationBar: NavBarWidget(),
-    body: Container(),
-  )));
+        bottomNavigationBar: NavBarWidget(),
+        body: Container(),
+      )));
 }
 
 // TODO: add daily streak counter, break day earned every # days completed

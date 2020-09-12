@@ -18,7 +18,6 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.grey,
         appBar: AppBar(
           backgroundColor: Colors.black,
           title: new Text(new DateFormat('EEEE M/d').format(DateTime.now())),

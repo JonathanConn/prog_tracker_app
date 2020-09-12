@@ -10,7 +10,7 @@ class NavBarWidget extends StatefulWidget {
 }
 
 class _NavBarWidgetState extends State<NavBarWidget> {
-  int _selectedIndex = 0;
+  int _selectedIndex = 2;
   final routes = [
     LeaderboardPage(),
     HomePage(),
