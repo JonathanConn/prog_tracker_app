@@ -8,6 +8,5 @@ ThemeData globalDarkTheme() {
   return ThemeData.dark().copyWith(
     textTheme: GoogleFonts.robotoMonoTextTheme(),
     accentColor: Colors.orange,
-    primaryColor: Colors.black,
   );
 }
