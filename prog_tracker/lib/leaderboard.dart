@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'themes.dart';
 
 class Choice {
   const Choice({this.title, this.icon});
@@ -34,6 +35,7 @@ class LeaderboardPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: globalDarkTheme(),
       home: DefaultTabController(
         length: choices.length,
         child: Scaffold(

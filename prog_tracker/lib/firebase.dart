@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:prog_tracker/home.dart';
+import 'themes.dart';
 
 final GoogleSignIn _googleSignIn = GoogleSignIn();
 final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -374,14 +375,19 @@ class NotCompletedTasksListView extends StatelessWidget {
                     // get task obj from each doc in snapshot
                     Task t = Database.buildTaskFromDocSnap(value);
 
-                    return new ListTile(
-                        // create new list tile for each task in doc
-                        title: new Text(t.name ?? "TaskName"),
-                        subtitle: new Text(t.description ?? ""),
-                        leading: getPriorityIcon(t.priority ?? 0),
-                        trailing: TaskMenu(
-                          task: t,
-                        ));
+                    return Container(
+                      child: new ListTile(
+                          // create new list tile for each task in doc
+                          shape: RoundedRectangleBorder(),
+                          title: new Text(
+                            t.name ?? "Task",
+                            style: Theme.of(context).textTheme.headline6,
+                          ),
+                          leading: getPriorityIcon(t.priority ?? 0),
+                          trailing: TaskMenu(
+                            task: t,
+                          )),
+                    );
                   }).toList(),
                 );
             }
@@ -445,8 +451,14 @@ class CompletedTasksListView extends StatelessWidget {
 
                     return new ListTile(
                         // create new list tile for each task in doc
-                        title: new Text(t.name ?? "TaskName"),
-                        subtitle: new Text(t.description ?? ""),
+                        title: new Text(
+                          t.name ?? "TaskName",
+                          style: Theme.of(context).textTheme.headline6,
+                        ),
+                        // subtitle: new Text(
+                        //   t.description ?? "",
+                        //   style: Theme.of(context).textTheme.bodyText1,
+                        // ),
                         leading: getPriorityIcon(t.priority ?? 0),
                         trailing: TaskMenu(
                           task: t,

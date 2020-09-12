@@ -36,8 +36,7 @@ class _TimeWidgetState extends State<TimeWidget> {
   Widget build(BuildContext context) {
     return Text(
       _timeString,
-      style: new TextStyle(
-          color: Colors.white, fontWeight: FontWeight.bold, fontSize: 50),
+      style: Theme.of(context).textTheme.headline3,
     );
   }
 

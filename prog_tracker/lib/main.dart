@@ -1,11 +1,10 @@
-import 'navbar.dart';
-
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'navbar.dart';
+import 'themes.dart';
 
 void main() {
   runApp(MaterialApp(
-      theme: ThemeData.dark(),
+      theme: globalDarkTheme(),
       home: Scaffold(
         bottomNavigationBar: NavBarWidget(),
         body: Container(),

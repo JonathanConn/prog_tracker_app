@@ -8,6 +8,7 @@ import 'firebase.dart';
 import 'clock.dart';
 import 'completedIndicator.dart';
 import 'package:flutter/cupertino.dart';
+import 'themes.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -19,7 +20,6 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.black,
           title: new Text(new DateFormat('EEEE M/d').format(DateTime.now())),
           actions: <Widget>[
             IconButton(
@@ -31,6 +31,7 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
         floatingActionButton: FloatingActionButton(
+          backgroundColor: globalDarkTheme().accentColor,
           onPressed: () => Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => TaskForm()),
