@@ -351,7 +351,7 @@ class NotCompletedTasksListView extends StatelessWidget {
   Widget build(BuildContext context) {
     return (() {
       if (_userID == null) {
-        return new Text("Sign in first plz");
+        return new Text("Sign in");
       } else {
         return new StreamBuilder(
           stream: Firestore.instance
@@ -369,6 +369,10 @@ class NotCompletedTasksListView extends StatelessWidget {
               case ConnectionState.waiting:
                 return new Text('Loading...');
               default:
+                // List<Widget> tiles = snapshot.data.documents
+                //     .map<Widget>((DocumentSnapshot value) {
+                //   return new Text(value.toString());
+                // }).toList();
                 List<Widget> tiles = snapshot.data.documents
                     .map<Widget>((DocumentSnapshot value) {
                   // get task obj from each doc in snapshot
