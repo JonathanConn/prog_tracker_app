@@ -56504,7 +56504,7 @@ else return s[0]},
 E:function(a,b){return new X.VM(this).$0()}}
 X.VM.prototype={
 $0:function(){var s,r=null
-if($.zT==null)return L.aI("Sign in first plz",r,r,r,r,r,r)
+if($.zT==null)return L.aI("Sign in",r,r,r,r,r,r)
 else{s=$.bg
 if(s==null){s=X.dc(r)
 $.bg=s}s=new O.ec(s)

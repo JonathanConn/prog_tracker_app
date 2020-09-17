@@ -6,7 +6,7 @@ const RESOURCES = {
   "manifest.json": "18fb895714bf5590a8e246addfeb7205",
 "index.html": "244d3cd4b4bad18e09c9d0803b007c42",
 "/": "244d3cd4b4bad18e09c9d0803b007c42",
-"main.dart.js": "c1541eb55dfea4c39e6949e7ca2d726d",
+"main.dart.js": "68934140313358a5987c8e8806721a83",
 "assets/packages/cupertino_icons/assets/CupertinoIcons.ttf": "115e937bb829a890521f72d2e664b632",
 "assets/FontManifest.json": "dc3d03800ccca4601324923c0b1d6d57",
 "assets/AssetManifest.json": "2efbb41d7877d10aac9d091f58ccd7b9",
