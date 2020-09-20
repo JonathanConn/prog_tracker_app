@@ -26,17 +26,8 @@ To create an tool which allows the user better track tasks throughout the day.
     -Android > 8.0
   -Web
   -(Desktop App coming)
-  
-
-## Images 
-![Image of Home Screen] 
-(https://github.com/JonathanConn/prog_tracker_app/blob/master/home_screen1.png)
-
-![Image of Leaderboard Screen] 
-(https://github.com/JonathanConn/prog_tracker_app/blob/master/leaderboard_page1.png)
 
 
-
-
-Web Version migrated from mobile version, test at:
+Web Version migrated from mobile version, 
+test here, using google sign in:
 https://jonathanconn.github.io/prog_tracker_app/
