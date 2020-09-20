@@ -26,8 +26,22 @@ To create an tool which allows the user better track tasks throughout the day.
     - Android > 8.0
   - Web
   - (Desktop App coming)
+  
+## Images 
+<img src="home_screen1.png" alt="drawing" width="200"/>
+
+This is the home screen where the un/completed tasks are presented.
+The bar at the top represents your progress for the day and is dynamic.
+From this screen, you have the ability to edit tasks, complete tasks, and add new tasks.
 
 
+<img src="leaderboard_page1.png" alt="drawing" width="200"/>
+
+This is a "leaderboard" page I made for fun.
+It allows you to see your rank among others on the platform and sort them by your preference.
+It's creation allowed me to work with Firebase more and learn more about NoSQL database structures.
+
+## Demo
 Web Version migrated from mobile version, 
 test here, using google sign in:
 https://jonathanconn.github.io/prog_tracker_app/
